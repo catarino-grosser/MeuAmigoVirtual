@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Amigo Virtual</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero-card">
+      <div class="status-pill" id="connectionStatus">Online</div>
+
+      <div class="avatar-scene" aria-label="Avatar animado do amigo virtual">
+        <div class="avatar" id="avatar">
+          <div class="avatar-head">
+            <div class="hair"></div>
+            <div class="eyes">
+              <span></span><span></span>
+            </div>
+            <div class="mouth" id="avatarMouth"></div>
+          </div>
+          <div class="avatar-body"></div>
+        </div>
+      </div>
+
+      <h1>Meu Amigo Virtual</h1>
+      <p class="subtitle">Um companheiro digital acolhedor para conversar, ouvir e responder com atenção.</p>
+    </section>
+
+    <section class="chat-card">
+      <div class="chat-header">
+        <div>
+          <strong>Léo</strong>
+          <span>Amigo virtual</span>
+        </div>
+        <button id="voiceToggle" class="icon-button" type="button" title="Ativar ou desativar voz">🔊</button>
+      </div>
+
+      <div id="chatMessages" class="chat-messages" aria-live="polite">
+        <article class="message bot">
+          <p>Oi! Eu sou o Léo. Que bom ver você por aqui. Como você está se sentindo hoje?</p>
+        </article>
+      </div>
+
+      <form id="chatForm" class="chat-form">
+        <button id="micButton" type="button" class="mic-button" title="Falar por voz">🎙️</button>
+        <input id="messageInput" type="text" placeholder="Escreva sua mensagem..." autocomplete="off" required />
+        <button type="submit">Enviar</button>
+      </form>
+
+      <p class="safe-note">Este amigo virtual oferece conversa e acolhimento, mas não substitui ajuda profissional em situações graves.</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
