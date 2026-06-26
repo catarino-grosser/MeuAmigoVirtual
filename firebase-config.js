@@ -2,10 +2,10 @@
 // Firebase Console > Project settings > General > Your apps > Web app.
 
 export const firebaseConfig = {
-  apiKey: "SUA_FIREBASE_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_PROJETO.appspot.com",
-  messagingSenderId: "SEU_SENDER_ID",
-  appId: "SEU_APP_ID"
+  apiKey: "AIzaSyBOUvciwEznBdQ9UBJ58ZioTmS3DH0dNVw",
+  authDomain: "meuamigovirtual-cws.firebaseapp.com",
+  projectId: "meuamigovirtual-cws",
+  storageBucket: "meuamigovirtual-cws.firebasestorage.app",
+  messagingSenderId: "582271107119",
+  appId: "1:582271107119:web:5b94484ca5823e525606da"
 };
