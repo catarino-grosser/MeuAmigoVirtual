@@ -11,9 +11,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    
+    /* Mude aqui: */
+    height: 100vh; /* Mantemos como fallback para navegadores muito antigos */
+    height: 100dvh; /* A medida dinâmica que resolve o problema no celular */
+    
     overflow: hidden;
 }
+
 
 .app-container {
     width: 100%;
