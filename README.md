@@ -1,66 +1,97 @@
-# Meu Amigo Virtual
+# Meu Amigo Virtual v2.0
 
-App web inicial em HTML, CSS e JavaScript com um amigo virtual acolhedor usando a API Gemini via Netlify Functions.
+Esta versão adiciona cadastro, login, recuperação de senha, modo visitante e memória permanente com Firebase Authentication + Firestore.
+
+## O que esta versão faz
+
+- Cadastro com nome, e-mail e senha.
+- Login com e-mail e senha.
+- Recuperação de senha por e-mail.
+- Logout.
+- Modo visitante com login anônimo.
+- Histórico de conversas salvo no Firestore.
+- Memória de nome, preferências, informações importantes e assuntos recentes.
+- A função Netlify continua protegendo a chave da API Gemini.
 
 ## Estrutura
 
 ```txt
-meu-amigo-virtual/
+meu-amigo-virtual-v2.0/
 ├── index.html
 ├── style.css
 ├── app.js
-├── netlify.toml
+├── firebase-config.js
 ├── firebase-config.example.js
+├── netlify.toml
 └── netlify/
     └── functions/
         └── chat.js
 ```
 
-## O que esta versão faz
+## Configurar Firebase
 
-- Interface responsiva para celular.
-- Avatar animado em CSS.
-- Chat com função segura no Netlify.
-- Voz usando `speechSynthesis` do navegador.
-- Botão de microfone usando reconhecimento de voz quando o navegador permitir.
-- Prompt de personalidade acolhedora para o amigo virtual.
+1. Acesse o Firebase Console.
+2. Crie ou abra seu projeto.
+3. Vá em **Authentication**.
+4. Clique em **Get started**.
+5. Em **Sign-in method**, ative:
+   - **Email/Password**
+   - **Anonymous**
+6. Vá em **Firestore Database**.
+7. Crie o banco de dados.
+8. Pode iniciar em modo de produção.
+9. Vá em **Project settings** > **General**.
+10. Crie ou selecione um app Web.
+11. Copie o objeto `firebaseConfig`.
+12. Cole os dados no arquivo `firebase-config.js`.
 
-## Como publicar no Netlify pelo GitHub
+## Regras do Firestore
 
-1. Crie um repositório no GitHub.
-2. Envie todos estes arquivos para o repositório.
-3. No Netlify, escolha **Add new site** > **Import an existing project**.
-4. Conecte com o GitHub e selecione o repositório.
-5. Em **Build settings**, pode deixar sem comando de build.
-6. O arquivo `netlify.toml` já informa que a pasta publicada é a raiz do projeto e que as funções ficam em `netlify/functions`.
+Use estas regras para cada usuário acessar somente seus próprios dados:
 
-## Configurar a API Gemini
+```txt
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
 
-1. Crie uma chave no Google AI Studio.
-2. No painel do Netlify, entre no site.
-3. Vá em **Site configuration** > **Environment variables**.
-4. Crie a variável:
+      match /messages/{messageId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}
+```
+
+## Configurar Gemini no Netlify
+
+No painel do Netlify, configure a variável de ambiente:
 
 ```txt
 GEMINI_API_KEY=sua_chave_aqui
 ```
 
-5. Opcionalmente, crie também:
+A variável abaixo é opcional:
 
 ```txt
 GEMINI_MODEL=gemini-2.5-flash
 ```
 
-6. Faça um novo deploy no Netlify.
+Se você não criar `GEMINI_MODEL`, o projeto usa automaticamente `gemini-2.5-flash`.
 
-## Observação de segurança
+## Publicar no Netlify
 
-A chave da API Gemini não fica no `app.js`. Ela fica protegida nas variáveis de ambiente do Netlify e é usada apenas pela função `netlify/functions/chat.js`.
+1. Envie a pasta para um repositório no GitHub.
+2. No Netlify, clique em **Add new site** > **Import an existing project**.
+3. Selecione o repositório.
+4. Em build command, deixe vazio.
+5. O arquivo `netlify.toml` já configura a publicação da raiz e as Netlify Functions.
+6. Configure `GEMINI_API_KEY` em **Site configuration** > **Environment variables**.
+7. Faça o deploy.
 
-## Próximos passos sugeridos
+## Observação importante
 
-1. Adicionar Firebase Authentication.
-2. Salvar histórico das conversas no Firestore.
-3. Criar tela de configurações do avatar.
-4. Trocar o avatar CSS por um modelo 3D com Three.js.
-5. Adicionar modo diário: o amigo pergunta como foi o dia e registra um resumo emocional.
+O modo visitante salva a memória no usuário anônimo do navegador. Se a pessoa trocar de celular, limpar os dados do navegador ou usar outro aparelho, pode perder o acesso à memória visitante.
+
+Para memória entre dispositivos, o ideal é usar cadastro com e-mail e senha.

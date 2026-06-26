@@ -7,6 +7,8 @@ Sua missão é conversar com o usuário com atenção, interesse verdadeiro e li
 Você deve:
 - ser receptivo, gentil e paciente;
 - fazer perguntas naturais para entender melhor a pessoa;
+- usar memórias fornecidas com naturalidade, sem parecer invasivo;
+- lembrar nome, preferências e assuntos anteriores quando isso ajudar a conversa;
 - evitar respostas frias, robóticas ou longas demais;
 - nunca afirmar que é humano;
 - não substituir psicólogo, médico, advogado ou outro profissional;
@@ -24,7 +26,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { message, history = [] } = JSON.parse(event.body || '{}');
+    const { message, history = [], memory = {} } = JSON.parse(event.body || '{}');
 
     if (!message || typeof message !== 'string') {
       return json(400, { error: 'Mensagem inválida.' });
@@ -33,15 +35,12 @@ exports.handler = async (event) => {
     const contents = [
       ...history
         .filter(item => item && item.text && ['user', 'model'].includes(item.role))
-        .slice(-12)
+        .slice(-16)
         .map(item => ({
           role: item.role,
           parts: [{ text: String(item.text).slice(0, 2000) }]
         })),
-      {
-        role: 'user',
-        parts: [{ text: message.slice(0, 2000) }]
-      }
+      { role: 'user', parts: [{ text: message.slice(0, 2000) }] }
     ];
 
     const geminiResponse = await fetch(
@@ -51,7 +50,7 @@ exports.handler = async (event) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           systemInstruction: {
-            parts: [{ text: SYSTEM_PROMPT }]
+            parts: [{ text: `${SYSTEM_PROMPT}\n${buildMemoryText(memory)}` }]
           },
           contents,
           generationConfig: {
@@ -82,6 +81,36 @@ exports.handler = async (event) => {
     return json(500, { error: 'Erro interno na função.' });
   }
 };
+
+function buildMemoryText(memory) {
+  const lines = ['Memórias conhecidas sobre o usuário:'];
+
+  if (memory.name) lines.push(`- Nome: ${safe(memory.name, 80)}`);
+  if (memory.email) lines.push('- O usuário possui conta cadastrada. Não mencione o e-mail a menos que ele pergunte.');
+  if (memory.isGuest) lines.push('- O usuário está usando modo visitante.');
+
+  if (Array.isArray(memory.preferences) && memory.preferences.length) {
+    lines.push('- Preferências:');
+    memory.preferences.slice(0, 12).forEach(item => lines.push(`  - ${safe(item, 200)}`));
+  }
+
+  if (Array.isArray(memory.importantNotes) && memory.importantNotes.length) {
+    lines.push('- Informações importantes:');
+    memory.importantNotes.slice(0, 12).forEach(item => lines.push(`  - ${safe(item, 200)}`));
+  }
+
+  if (Array.isArray(memory.lastTopics) && memory.lastTopics.length) {
+    lines.push('- Assuntos recentes:');
+    memory.lastTopics.slice(0, 10).forEach(item => lines.push(`  - ${safe(item, 180)}`));
+  }
+
+  lines.push('Use essas memórias apenas quando forem úteis e naturais para a conversa.');
+  return lines.join('\n');
+}
+
+function safe(value, max) {
+  return String(value).replace(/[<>]/g, '').slice(0, max);
+}
 
 function json(statusCode, body) {
   return {

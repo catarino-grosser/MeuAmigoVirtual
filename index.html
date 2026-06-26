@@ -9,15 +9,13 @@
 <body>
   <main class="app-shell">
     <section class="hero-card">
-      <div class="status-pill" id="connectionStatus">Online</div>
+      <div class="status-pill" id="connectionStatus">Iniciando...</div>
 
       <div class="avatar-scene" aria-label="Avatar animado do amigo virtual">
         <div class="avatar" id="avatar">
           <div class="avatar-head">
             <div class="hair"></div>
-            <div class="eyes">
-              <span></span><span></span>
-            </div>
+            <div class="eyes"><span></span><span></span></div>
             <div class="mouth" id="avatarMouth"></div>
           </div>
           <div class="avatar-body"></div>
@@ -25,34 +23,72 @@
       </div>
 
       <h1>Meu Amigo Virtual</h1>
-      <p class="subtitle">Um companheiro digital acolhedor para conversar, ouvir e responder com atenção.</p>
+      <p class="subtitle">Um companheiro digital acolhedor para conversar, ouvir e lembrar do que é importante para você.</p>
+      <p class="memory-note" id="memoryStatus">Preparando memória...</p>
     </section>
 
     <section class="chat-card">
-      <div class="chat-header">
-        <div>
-          <strong>Léo</strong>
-          <span>Amigo virtual</span>
+      <div id="authView" class="auth-view">
+        <div class="auth-box">
+          <h2 id="authTitle">Entrar</h2>
+          <p class="auth-subtitle">Entre para manter sua memória salva em qualquer conversa.</p>
+
+          <form id="authForm" class="auth-form">
+            <label id="nameField" class="hidden">
+              Nome
+              <input id="displayNameInput" type="text" placeholder="Seu nome" autocomplete="name" />
+            </label>
+
+            <label>
+              E-mail
+              <input id="emailInput" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" required />
+            </label>
+
+            <label>
+              Senha
+              <input id="passwordInput" type="password" placeholder="Mínimo 6 caracteres" autocomplete="current-password" required minlength="6" />
+            </label>
+
+            <button id="authSubmit" type="submit">Entrar</button>
+          </form>
+
+          <div class="auth-actions">
+            <button id="toggleAuthMode" type="button" class="link-button">Criar nova conta</button>
+            <button id="resetPasswordButton" type="button" class="link-button">Esqueci minha senha</button>
+          </div>
+
+          <div class="divider"><span>ou</span></div>
+
+          <button id="guestButton" type="button" class="guest-button">Continuar como visitante</button>
+          <p id="authFeedback" class="auth-feedback" aria-live="polite"></p>
         </div>
-        <button id="voiceToggle" class="icon-button" type="button" title="Ativar ou desativar voz">🔊</button>
       </div>
 
-      <div id="chatMessages" class="chat-messages" aria-live="polite">
-        <article class="message bot">
-          <p>Oi! Eu sou o Léo. Que bom ver você por aqui. Como você está se sentindo hoje?</p>
-        </article>
+      <div id="chatView" class="chat-view hidden">
+        <div class="chat-header">
+          <div>
+            <strong>Léo</strong>
+            <span id="userInfoText">Amigo virtual com memória</span>
+          </div>
+          <div class="header-actions">
+            <button id="voiceToggle" class="icon-button" type="button" title="Ativar ou desativar voz">🔊</button>
+            <button id="logoutButton" class="icon-button" type="button" title="Sair">Sair</button>
+          </div>
+        </div>
+
+        <div id="chatMessages" class="chat-messages" aria-live="polite"></div>
+
+        <form id="chatForm" class="chat-form">
+          <button id="micButton" type="button" class="mic-button" title="Falar por voz">🎙️</button>
+          <input id="messageInput" type="text" placeholder="Escreva sua mensagem..." autocomplete="off" required />
+          <button type="submit">Enviar</button>
+        </form>
+
+        <p class="safe-note">Este amigo virtual oferece conversa e acolhimento, mas não substitui ajuda profissional em situações graves.</p>
       </div>
-
-      <form id="chatForm" class="chat-form">
-        <button id="micButton" type="button" class="mic-button" title="Falar por voz">🎙️</button>
-        <input id="messageInput" type="text" placeholder="Escreva sua mensagem..." autocomplete="off" required />
-        <button type="submit">Enviar</button>
-      </form>
-
-      <p class="safe-note">Este amigo virtual oferece conversa e acolhimento, mas não substitui ajuda profissional em situações graves.</p>
     </section>
   </main>
 
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

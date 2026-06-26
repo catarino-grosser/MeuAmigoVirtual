@@ -1,4 +1,5 @@
-// Copie este arquivo, renomeie para firebase-config.js e preencha com os dados do seu app Web no Firebase.
+// Preencha com os dados reais do seu projeto Firebase.
+// Firebase Console > Project settings > General > Your apps > Web app.
 
 export const firebaseConfig = {
   apiKey: "SUA_FIREBASE_API_KEY",
