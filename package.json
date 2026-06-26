@@ -1,0 +1,13 @@
+{
+  "name": "meu-amigo-virtual-v01",
+  "version": "0.1.0",
+  "description": "Ted, um amigo virtual acolhedor com Firebase, Netlify Functions e Google AI Studio.",
+  "private": true,
+  "scripts": {
+    "start": "netlify dev",
+    "build": "echo 'Projeto estático pronto para deploy'"
+  },
+  "devDependencies": {
+    "netlify-cli": "latest"
+  }
+}
