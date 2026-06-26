@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigo Virtual</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="avatar-section">
+            <div class="avatar-orb" id="avatarOrb"></div>
+            <p class="avatar-status" id="avatarStatus">Pronto para conversar...</p>
+        </div>
+
+        <div class="chat-section" id="chatSection">
+            <div class="messages-container" id="messagesContainer">
+                </div>
+        </div>
+
+        <div class="input-section">
+            <form id="chatForm">
+                <input type="text" id="userInput" placeholder="Desabafe ou converse aqui..." autocomplete="off" required />
+                <button type="submit" id="sendBtn">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
