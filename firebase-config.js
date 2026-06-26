@@ -1,7 +1,8 @@
 // Preencha com os dados reais do seu projeto Firebase.
 // Firebase Console > Project settings > General > Your apps > Web app.
+// IMPORTANTE: mantenha exatamente o formato abaixo com window.firebaseConfig = { ... }
 
-export const firebaseConfig = {
+window.firebaseConfig =  {
   apiKey: "AIzaSyBOUvciwEznBdQ9UBJ58ZioTmS3DH0dNVw",
   authDomain: "meuamigovirtual-cws.firebaseapp.com",
   projectId: "meuamigovirtual-cws",

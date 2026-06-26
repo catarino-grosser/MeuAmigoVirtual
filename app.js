@@ -1,4 +1,3 @@
-import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import {
   getAuth,
@@ -74,7 +73,7 @@ function createEmptyProfile() {
 }
 
 function isFirebaseConfigured() {
-  return firebaseConfig
+  return window.firebaseConfig
     && firebaseConfig.apiKey
     && !firebaseConfig.apiKey.includes('SUA_')
     && firebaseConfig.projectId
@@ -90,7 +89,7 @@ async function boot() {
   }
 
   try {
-    const app = initializeApp(firebaseConfig);
+    const app = initializeApp(window.firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
     connectionStatus.textContent = 'Online';
