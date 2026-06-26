@@ -8,26 +8,35 @@
 body {
     background-color: #0a0b10;
     color: #e2e8f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     
-    /* Mude aqui: */
-    height: 100vh; /* Mantemos como fallback para navegadores muito antigos */
-    height: 100dvh; /* A medida dinâmica que resolve o problema no celular */
-    
+    /* A trava absoluta: prende o body na tela inteira */
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    
+    /* Centralização removida daqui, pois o app-container vai preencher tudo */
 }
 
-
 .app-container {
+    /* Prende o container exatamente dentro dos limites do body */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
-    max-width: 480px;
-    height: 100vh;
+    height: 100%;
+    
     display: flex;
     flex-direction: column;
     background: radial-gradient(circle at top, #141622 0%, #0a0b10 100%);
 }
+
 
 /* Seção do Avatar */
 .avatar-section {
