@@ -1,46 +1,54 @@
-# Ted — Meu Amigo Virtual v0.1
+# Ted 2.0 — Meu Amigo Virtual
 
-App web em HTML, CSS e JavaScript com Firebase Auth, Firestore, Netlify Functions e Google AI Studio/Gemini.
+App web feito com HTML, CSS e JavaScript, Firebase Auth/Firestore, Netlify Functions e Gemini.
 
-## O que já vem pronto
+## Novidades da versão 2.0
 
 - Login e cadastro por e-mail/senha.
-- Recuperação de senha.
-- Chat com histórico salvo no Firestore.
-- Netlify Function para proteger a chave da IA.
-- Avatar 2D animado.
-- Voz do Ted usando síntese de fala do navegador.
-- Microfone usando reconhecimento de fala quando o navegador permitir.
-- Tema claro/escuro.
+- Página pessoal.
+- Chat com histórico por usuário.
+- Respostas locais para economizar cota do Gemini.
+- Limite diário configurável por usuário.
+- Diário emocional.
+- Memórias manuais e captura simples de memórias.
+- Configurações de voz e personalidade.
+- Netlify Function protegendo `GEMINI_API_KEY`.
+- Avatar CSS animado com estados de pensamento e fala.
 
-## Variável no Netlify
+## Estrutura
 
-A função aceita qualquer um destes nomes:
+```txt
+index.html
+style.css
+script.js
+firebase.js
+firestore.rules
+netlify.toml
+netlify/functions/chat.js
+```
 
-- `GEMINI_API_KEY`
-- `GOOGLE_AI_API_KEY`
-- `GOOGLE_API_KEY`
+## Netlify
 
-Se você já criou a variável com outro nome, renomeie no Netlify ou edite `netlify/functions/chat.js`.
+Crie a variável de ambiente:
+
+```txt
+GEMINI_API_KEY
+```
 
 Opcional:
 
-- `GEMINI_MODEL=gemini-1.5-flash`
-
-## Deploy no Netlify
-
-1. Envie esta pasta para o GitHub.
-2. Conecte o repositório ao Netlify.
-3. Confirme que a variável da chave da API está cadastrada em Site configuration > Environment variables.
-4. Faça o deploy.
+```txt
+GEMINI_MODEL=gemini-2.5-flash
+```
 
 ## Firebase
 
-O arquivo `js/firebase.js` já contém a configuração que você enviou.
+Ative em Authentication:
 
-No Firestore, use as regras do arquivo `firestore.rules`.
+- Email/Password
 
-## Observação importante
+No Firestore, publique as regras do arquivo `firestore.rules`.
 
-A chave do Firebase no front-end não é segredo. O que protege os dados são as regras do Firestore e o Authentication.
-A chave da IA, sim, precisa ficar escondida no Netlify como variável de ambiente.
+## Observação
+
+A chave Firebase no frontend é normal em app web. A chave sensível é a do Gemini, que fica apenas no Netlify.
