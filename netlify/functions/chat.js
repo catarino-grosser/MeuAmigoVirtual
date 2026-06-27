@@ -20,11 +20,11 @@ exports.handler = async function (event) {
 
     const historico = history.slice(-10).map((item) => {
       const role = item.role === "user" ? "Usuário" : "Ted";
-      return `${role}: ${String(item.text || "").slice(0, 450)}`;
+      return `${role}: ${String(item.text || "").slice(0, 420)}`;
     }).join("\n");
 
-    const mems = memories.slice(0, 12).map((m) => `- ${String(m.text || m).slice(0, 250)}`).join("\n");
-    const diaryText = diary.slice(0, 3).map((d) => `- Humor: ${d.mood || "não informado"}. Registro: ${String(d.text || "").slice(0, 250)}`).join("\n");
+    const mems = memories.slice(0, 12).map((m) => `- ${String(m.text || m).slice(0, 220)}`).join("\n");
+    const diaryText = diary.slice(0, 3).map((d) => `- Humor: ${d.mood || "não informado"}. Registro: ${String(d.text || "").slice(0, 220)}`).join("\n");
 
     const estilo = {
       amigo: "amigo acolhedor, companheiro e interessado",
@@ -39,13 +39,15 @@ Você é Ted, um amigo virtual brasileiro.
 Nome do usuário: ${userName}
 Estilo escolhido: ${estilo}
 
-Regras de conduta:
+Regras essenciais:
 - seja receptivo, acolhedor, companheiro, interessado e cuidadoso;
 - responda em português do Brasil;
 - seja natural, claro e útil;
-- quando o usuário pedir ajuda, explique com começo, meio e fim;
+- responda em 2 a 5 frases na maioria das vezes;
+- quando o usuário pedir ajuda prática, organize em passos curtos;
+- use as memórias apenas quando forem relevantes;
 - não finja ser humano;
-- não diga que sente emoções reais;
+- não diga que tem sentimentos reais;
 - não crie dependência emocional;
 - não prometa disponibilidade permanente;
 - não dê diagnóstico médico, psicológico, jurídico ou financeiro;
@@ -65,13 +67,13 @@ ${message}
 
 Responda como Ted:`;
 
-    const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+    const model = process.env.GEMINI_MODEL || "gemini-1.5-flash";
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.75, maxOutputTokens: 500 }
+        generationConfig: { temperature: 0.72, maxOutputTokens: 320 }
       })
     });
 
@@ -90,12 +92,12 @@ Responda como Ted:`;
     return json(200, { reply: reply.trim(), source: "gemini" });
   } catch (error) {
     console.error("ERRO_INTERNO_CHAT:", error);
-    return json(500, { error: "Erro interno na função." });
+    return json(500, { error: "Erro interno na função.", detail: error.message });
   }
 };
 
 function localReply(message, userName) {
-  const t = message.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[!?.,]/g, "").trim();
+  const t = normalize(message);
   const map = {
     "oi": `Oi, ${userName}! Que bom te ver por aqui. Como você está hoje?`,
     "ola": `Olá, ${userName}! Estou aqui. Como foi seu dia?`,
@@ -104,9 +106,27 @@ function localReply(message, userName) {
     "boa noite": `Boa noite, ${userName}! Como você está se sentindo agora?`,
     "obrigado": "Eu que agradeço por conversar comigo. Estou por aqui.",
     "obrigada": "Eu que agradeço por conversar comigo. Estou por aqui.",
-    "valeu": "Valeu por estar aqui também. Me conta, como posso te acompanhar agora?"
+    "valeu": "Valeu por estar aqui também. Me conta, como posso te acompanhar agora?",
+    "tchau": "Até mais! Foi bom conversar com você. Quando voltar, continuamos daqui.",
+    "o que voce consegue fazer": "Eu posso conversar com você, lembrar informações importantes, ajudar nos estudos, registrar ideias, acompanhar seu diário e organizar pequenos planos. Também posso falar em voz alta quando essa opção estiver ativada.",
+    "voce consegue fazer o que por aqui": "Eu posso conversar com você, lembrar informações importantes, ajudar nos estudos, registrar ideias, acompanhar seu diário e organizar pequenos planos. Também posso falar em voz alta quando essa opção estiver ativada.",
+    "quem e voce": "Eu sou o Ted, um amigo virtual com IA. Não sou uma pessoa real, mas fui criado para conversar de forma acolhedora e útil."
   };
-  return map[t] || null;
+  if (map[t]) return map[t];
+
+  if (t.includes("o que voce consegue") || t.includes("o que vc consegue") || t.includes("suas funcoes")) {
+    return "Eu posso conversar, ajudar a estudar, lembrar fatos importantes, registrar diário, organizar ideias e acompanhar sua evolução no app. Ainda estou em desenvolvimento, mas já consigo ser um companheiro virtual bem útil.";
+  }
+
+  if (t.length <= 3 && ["sim", "nao", "ok"].includes(t)) {
+    return "Entendi. Quer me contar um pouco mais para eu te acompanhar melhor?";
+  }
+
+  return null;
+}
+
+function normalize(text) {
+  return String(text || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[!?.,]/g, "").trim();
 }
 
 function json(statusCode, data) {
