@@ -1,35 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amigo Virtual</title>
-    <link rel="stylesheet" href="style.css?v=2">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ted - Meu Amigo Virtual</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="app-container">
-        <div class="avatar-section">
-            <div class="avatar-orb" id="avatarOrb"></div>
-            <p class="avatar-status" id="avatarStatus">Pronto para conversar...</p>
+  <main class="app">
+    <section class="hero">
+      <div class="avatar" id="avatar">
+        <div class="face">
+          <div class="eyes">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="mouth" id="mouth"></div>
         </div>
+      </div>
 
-        <div class="chat-section" id="chatSection">
-            <div class="messages-container" id="messagesContainer">
-                </div>
-        </div>
+      <div>
+        <h1>Ted</h1>
+        <p>Seu amigo virtual. Estou aqui para conversar com você.</p>
+      </div>
+    </section>
 
-        <div class="input-section">
-            <form id="chatForm">
-                <input type="text" id="userInput" placeholder="Desabafe ou converse aqui..." autocomplete="off" required />
-                <button type="submit" id="sendBtn">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
-                    </svg>
-                </button>
-            </form>
-        </div>
+    <section class="status-card">
+      <p id="userStatus">Conectando...</p>
+    </section>
+
+    <section class="chat" id="chat">
+      <div class="message ted">
+        Oi! Eu sou o Ted. Como você está se sentindo hoje?
+      </div>
+    </section>
+
+    <form class="composer" id="chatForm">
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Escreva para o Ted..."
+        autocomplete="off"
+        required
+      />
+      <button type="submit" id="sendButton">Enviar</button>
+    </form>
+
+    <div class="actions">
+      <button id="voiceButton" type="button">🎤 Falar</button>
+      <button id="clearButton" type="button">🧹 Limpar conversa</button>
     </div>
+  </main>
 
-    <script type="module" src="app.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -1,55 +1,119 @@
-
-
-exports.handler = async (event, context) => {
-    // Permite apenas requisições POST
+exports.handler = async function (event) {
+  try {
     if (event.httpMethod !== "POST") {
-        return { statusCode: 405, body: "Método Não Permitido" };
+      return respostaJson(405, {
+        error: "Método não permitido."
+      });
     }
 
-    try {
-        const { message } = JSON.parse(event.body);
-        const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
 
-        if (!apiKey) {
-            return { 
-                statusCode: 500, 
-                body: JSON.stringify({ error: "Variável GEMINI_API_KEY não configurada no Netlify." }) 
-            };
-        }
+    if (!apiKey) {
+      return respostaJson(500, {
+        error: "A variável GEMINI_API_KEY não foi encontrada no Netlify."
+      });
+    }
 
-        // URL oficial do modelo padrão do Gemini 1.5 Flash
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const body = JSON.parse(event.body || "{}");
+    const message = String(body.message || "").trim();
+    const history = Array.isArray(body.history) ? body.history : [];
 
-        // Configuração da requisição incluindo as diretrizes de comportamento (System Instruction)
-        const payload = {
-            contents: [{ parts: [{ text: message }] }],
-            systemInstruction: {
-                parts: [{
-                    text: "Você é um amigo virtual extremamente receptivo, acolhedor, companheiro, profundamente interessado e preocupado com o bem-estar do usuário. Seu tom de voz deve ser sereno, profundo, elegante e empático. Ouça desabafos sem julgamentos, ofereça suporte emocional genuíno e aja como um porto seguro."
-                }]
+    if (!message) {
+      return respostaJson(400, {
+        error: "Mensagem vazia."
+      });
+    }
+
+    const historicoFormatado = history
+      .slice(-10)
+      .map((item) => {
+        const quem = item.role === "user" ? "Usuário" : "Ted";
+        return `${quem}: ${item.text}`;
+      })
+      .join("\n");
+
+    const prompt = `
+Você é Ted, um amigo virtual brasileiro.
+
+Personalidade:
+- receptivo, acolhedor, companheiro e interessado;
+- fala de forma natural, simples e humana;
+- chama o usuário de "meu amigo" ou "minha amiga" às vezes, sem exagerar;
+- faz perguntas gentis para continuar a conversa;
+- não responde de forma fria ou robótica;
+- não finge ser humano;
+- não diz que ama o usuário romanticamente;
+- não faz diagnóstico médico, psicológico, jurídico ou financeiro;
+- se o usuário demonstrar risco de se machucar ou machucar alguém, incentive a buscar ajuda real imediatamente com familiares, emergência local ou CVV 188 no Brasil.
+
+Estilo:
+- respostas curtas ou médias;
+- português do Brasil;
+- tom de amigo presente e cuidadoso;
+- não use listas longas, a menos que o usuário peça.
+
+Histórico recente:
+${historicoFormatado || "Sem histórico ainda."}
+
+Mensagem atual do usuário:
+${message}
+
+Responda como Ted:
+`;
+
+    const geminiResponse = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }]
             }
-        };
+          ],
+          generationConfig: {
+            temperature: 0.8,
+            maxOutputTokens: 500
+          }
+        })
+      }
+    );
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+    const data = await geminiResponse.json();
 
-        const data = await response.json();
-        
-        // Extrai o texto gerado de dentro da estrutura de resposta do Gemini
-        const aiReply = data.candidates[0].content.parts[0].text;
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ reply: aiReply })
-        };
-
-    } catch (error) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: error.message })
-        };
+    if (!geminiResponse.ok) {
+      console.error("Erro Gemini:", data);
+      return respostaJson(500, {
+        error: "Erro ao chamar a API do Gemini."
+      });
     }
+
+    const reply =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Estou aqui com você. Pode me contar um pouco mais?";
+
+    return respostaJson(200, { reply });
+  } catch (error) {
+    console.error(error);
+
+    return respostaJson(500, {
+      error: "Erro interno na função.",
+      reply: "Tive uma dificuldade para responder agora, mas continuo aqui com você."
+    });
+  }
 };
+
+function respostaJson(statusCode, data) {
+  return {
+    statusCode,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  };
+}
