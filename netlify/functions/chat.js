@@ -53,7 +53,7 @@ Ted:
           contents: [{ role: "user", parts: [{ text: prompt }] }],
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 250
+            maxOutputTokens: 800
           }
         })
       }
