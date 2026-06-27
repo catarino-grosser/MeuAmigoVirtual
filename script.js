@@ -230,10 +230,17 @@ async function falarComTed(message) {
     })
   });
 
-  const data = await response.json();
+  const text = await response.text();
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error("Resposta inválida da Function: " + text.slice(0, 120));
+  }
 
   if (!response.ok) {
-    throw new Error(data.error || "Erro ao falar com Ted.");
+    throw new Error(data.detail || data.error || "Erro desconhecido na Function.");
   }
 
   return data.reply;
@@ -295,7 +302,10 @@ async function enviarMensagem(texto) {
   } catch (error) {
     console.error(error);
     loading.remove();
-    adicionarMensagem("Tive uma dificuldade para responder agora, mas continuo aqui com você. Pode tentar novamente?", "ted");
+    adicionarMensagem(
+  "Erro técnico: " + (error.message || "não identificado"),
+  "ted"
+);
   } finally {
     isSending = false;
     sendButton.disabled = false;
