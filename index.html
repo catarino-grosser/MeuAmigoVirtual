@@ -3,53 +3,184 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Ted - Meu Amigo Virtual</title>
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app">
-    <section class="hero">
-      <div class="avatar" id="avatar">
-        <div class="face">
-          <div class="eyes">
-            <span></span>
-            <span></span>
-          </div>
-          <div class="mouth" id="mouth"></div>
+
+    <!-- CABEÇALHO -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="mini-avatar">
+          <span></span>
+        </div>
+        <div>
+          <h1>Ted</h1>
+          <p>Meu amigo virtual</p>
         </div>
       </div>
 
-      <div>
-        <h1>Ted</h1>
-        <p>Seu amigo virtual. Estou aqui para conversar com você.</p>
+      <button id="logoutButton" class="ghost hidden" type="button">
+        Sair
+      </button>
+    </header>
+
+    <!-- TELA DE LOGIN / CADASTRO -->
+    <section id="authScreen" class="screen auth-screen">
+      <div class="auth-card">
+        <div class="big-avatar">
+          <div class="face">
+            <div class="eyes">
+              <span></span>
+              <span></span>
+            </div>
+            <div class="mouth"></div>
+          </div>
+        </div>
+
+        <h2>Entre para conversar com o Ted</h2>
+        <p>
+          Crie sua conta para manter seu histórico salvo e continuar suas conversas depois.
+        </p>
+
+        <form id="authForm" class="form">
+          <input
+            type="text"
+            id="nameInput"
+            placeholder="Seu nome"
+            autocomplete="name"
+          />
+
+          <input
+            type="email"
+            id="emailInput"
+            placeholder="Seu e-mail"
+            autocomplete="email"
+            required
+          />
+
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Sua senha"
+            autocomplete="current-password"
+            minlength="6"
+            required
+          />
+
+          <button id="authSubmitButton" type="submit">
+            Entrar
+          </button>
+        </form>
+
+        <button id="toggleAuthButton" class="link-button" type="button">
+          Ainda não tenho conta. Quero me cadastrar.
+        </button>
+
+        <p id="authMessage" class="message-info"></p>
       </div>
     </section>
 
-    <section class="status-card">
-      <p id="userStatus">Conectando...</p>
-    </section>
+    <!-- PÁGINA PESSOAL -->
+    <section id="homeScreen" class="screen hidden">
+      <div class="profile-card">
+        <div class="big-avatar calm">
+          <div class="face">
+            <div class="eyes">
+              <span></span>
+              <span></span>
+            </div>
+            <div class="mouth"></div>
+          </div>
+        </div>
 
-    <section class="chat" id="chat">
-      <div class="message ted">
-        Oi! Eu sou o Ted. Como você está se sentindo hoje?
+        <div>
+          <h2 id="welcomeTitle">Olá!</h2>
+          <p>
+            Esta é sua página pessoal. Suas conversas com o Ted ficam salvas na sua conta.
+          </p>
+        </div>
+      </div>
+
+      <div class="dashboard">
+        <button id="openChatButton" class="primary-card" type="button">
+          <strong>Conversar com Ted</strong>
+          <span>Abra o chat e continue sua conversa.</span>
+        </button>
+
+        <button id="clearHistoryButton" class="secondary-card" type="button">
+          <strong>Limpar histórico</strong>
+          <span>Apagar todas as mensagens salvas.</span>
+        </button>
+      </div>
+
+      <div class="memory-card">
+        <h3>Memória do Ted</h3>
+        <p id="memoryText">
+          Em breve o Ted poderá guardar lembranças importantes sobre você.
+        </p>
       </div>
     </section>
 
-    <form class="composer" id="chatForm">
-      <input
-        type="text"
-        id="messageInput"
-        placeholder="Escreva para o Ted..."
-        autocomplete="off"
-        required
-      />
-      <button type="submit" id="sendButton">Enviar</button>
-    </form>
+    <!-- TELA DO CHAT -->
+    <section id="chatScreen" class="screen chat-screen hidden">
+      <div class="chat-header">
+        <button id="backHomeButton" class="ghost" type="button">
+          ← Voltar
+        </button>
 
-    <div class="actions">
-      <button id="voiceButton" type="button">🎤 Falar</button>
-      <button id="clearButton" type="button">🧹 Limpar conversa</button>
-    </div>
+        <div class="ted-status">
+          <div class="avatar" id="avatar">
+            <div class="face">
+              <div class="eyes">
+                <span></span>
+                <span></span>
+              </div>
+              <div class="mouth"></div>
+            </div>
+          </div>
+
+          <div>
+            <h2>Ted</h2>
+            <p id="connectionStatus">Pronto para conversar</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="chat" class="chat">
+        <div class="message ted">
+          Oi! Eu sou o Ted. Como você está hoje?
+        </div>
+      </div>
+
+      <form id="chatForm" class="composer">
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Escreva para o Ted..."
+          autocomplete="off"
+          required
+        />
+
+        <button id="sendButton" type="submit">
+          Enviar
+        </button>
+      </form>
+
+      <div class="actions">
+        <button id="voiceButton" type="button">
+          🎤 Falar
+        </button>
+
+        <button id="stopVoiceButton" type="button">
+          🔇 Parar voz
+        </button>
+      </div>
+    </section>
+
   </main>
 
   <script type="module" src="script.js"></script>
