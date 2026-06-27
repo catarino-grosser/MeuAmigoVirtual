@@ -1,30 +1,22 @@
-# Ted 2.0 — Meu Amigo Virtual
+# Ted 2.1 - Meu Amigo Virtual
 
-App web feito com HTML, CSS e JavaScript, Firebase Auth/Firestore, Netlify Functions e Gemini.
+Versão 2.1 do Ted, com login/cadastro, histórico por usuário, diário, memórias, respostas locais para economizar API, limite diário, voz, avatar emocional e Netlify Function para proteger a chave do Gemini.
 
-## Novidades da versão 2.0
+## Estrutura correta no GitHub
 
-- Login e cadastro por e-mail/senha.
-- Página pessoal.
-- Chat com histórico por usuário.
-- Respostas locais para economizar cota do Gemini.
-- Limite diário configurável por usuário.
-- Diário emocional.
-- Memórias manuais e captura simples de memórias.
-- Configurações de voz e personalidade.
-- Netlify Function protegendo `GEMINI_API_KEY`.
-- Avatar CSS animado com estados de pensamento e fala.
-
-## Estrutura
+Os arquivos devem ficar na raiz do repositório:
 
 ```txt
 index.html
 style.css
 script.js
 firebase.js
-firestore.rules
 netlify.toml
-netlify/functions/chat.js
+firestore.rules
+README.md
+netlify/
+  functions/
+    chat.js
 ```
 
 ## Netlify
@@ -35,20 +27,29 @@ Crie a variável de ambiente:
 GEMINI_API_KEY
 ```
 
-Opcional:
+Opcionalmente, você pode criar:
 
 ```txt
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-1.5-flash
 ```
 
 ## Firebase
 
-Ative em Authentication:
+Ative no Authentication:
 
-- Email/Password
+```txt
+Email/Password
+```
 
-No Firestore, publique as regras do arquivo `firestore.rules`.
+Publique as regras do arquivo `firestore.rules` no Firestore.
 
-## Observação
+## Melhorias da v2.1
 
-A chave Firebase no frontend é normal em app web. A chave sensível é a do Gemini, que fica apenas no Netlify.
+- Respostas locais para mensagens simples, economizando chamadas à API.
+- Contador diário de uso com IA por usuário.
+- Memórias automáticas e manuais.
+- Diário com humor.
+- Nível de amizade baseado no uso.
+- Avatar muda de humor conforme a resposta.
+- Botões rápidos no chat.
+- `netlify.toml` corrigido para publicar Functions.
